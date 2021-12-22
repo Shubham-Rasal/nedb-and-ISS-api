@@ -1,0 +1,6 @@
+node_modules/
+database.db
+input.txt
+moodData.db
+trial.js
+text.txt

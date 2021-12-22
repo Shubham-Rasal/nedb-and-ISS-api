@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+
+
+    <title>Map and Geo-location</title>
+</head>
+
+<body>
+
+
+    <header>
+        
+    <div class="wrap">
+        <button class="button" id="ISS" onclick="location.href = './index.html'">Back</button>
+      </div>
+        <!-- <button onclick="location.href = './index.html'">Back</button> -->
+        <h1 style="text-align:center; height: 20px;margin-top:3px;">Where is the ISS</h1>
+
+    </header>
+
+<div id="main-container">
+    <div id="data-container">
+        <div id='para'>
+            <h3 id="latitude"></h3>
+            <h3 id="longitude"></h3>
+            <h3 id="altitude"></h3>
+
+        </div>
+    </div>
+    <div id="map-container">
+        <div id="minemap"></div>
+    </div>
+</div>
+
+
+
+    <style>
+        body {
+            background-color: rgb(109, 221, 255);
+
+
+        }
+
+        header {
+            display:flex;
+            
+           flex-direction: row;
+           flex-grow:2;
+           justify-content:flex-start;
+            background-color: aqua;
+            background-position: fixed;
+            height: 10%;
+            width:100%;
+        }
+
+        .button {
+            /* flex-grow: 9; */
+          
+        width: 130px;
+        height: 40px;
+        margin-right: 400px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 900;
+        color: #000;
+        background-color: #fff;
+        border: none;
+        border-radius: 45px;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease 0s;
+        cursor: pointer;
+        outline: none;
+        }
+      
+      .button:hover {
+        background-color: #091aff;
+        box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+        color: #fff;
+        transform: translateX(7px);
+      }
+
+        #main-container{
+         
+            display: flex;
+            flex-direction:row;
+            height: 200px;
+            width: 100%;
+            /* justify-content:safe; */
+        }
+
+        #data-container {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+
+        #para {
+            display: flex;
+            background-color: rgb(152, 255, 255);
+            width: 300px;
+            height: 200px;
+            padding: 50px;
+            font-size: 20px;
+            flex-direction: column;
+            justify-content: center;
+
+
+
+
+
+            border-radius: 100px;
+        }
+
+        /* #latitude{
+            height: 00px;
+        } */
+
+
+        #map-container {
+            display: flex;
+            justify-content: center;
+            padding: 50px;
+            border-color: black;
+            border-width: 10px;
+            border-radius: 50px;
+
+
+        }
+
+        #minemap {
+
+            height: 400px;
+            width: 600px;
+
+
+        }
+    </style>
+
+
+
+
+
+    <script>
+
+        const mymap = L.map('minemap').setView([0, 0], 8);
+        const myIcon = L.icon({
+            iconUrl: 'iss.png',
+            iconSize: [70, 90],
+            iconAnchor: [22, 94],
+            popupAnchor: [-3, -76],
+            // shadowUrl: 'my-icon-shadow.png',
+            // shadowSize: [68, 95],
+            // shadowAnchor: [22, 94]
+        });
+        
+        
+        const tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
+            {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(mymap);
+            const marker = L.marker([0, 0],{icon:myIcon}).addTo(mymap);
+        marker.bindPopup("<h1>I am here!!</h>").openPopup();
+
+        
+
+
+
+        const url = 'https://api.wheretheiss.at/v1/satellites/25544'
+
+        async function getISS() {
+            const response = await fetch(url);
+            // console.log(response)
+            const data = await response.json();
+            //    console.log(data.latitude)
+            const { latitude, longitude, altitude, velocity } = data;
+
+            document.getElementById('latitude').textContent = "Latitude= " + latitude.toFixed(2) + " °";
+            document.getElementById('longitude').textContent = "Longitude= " + longitude.toFixed(2) + " °";
+            document.getElementById('altitude').textContent = "Altitude= " + altitude.toFixed(2) + " km";
+
+            mymap.setView([latitude,longitude])
+            marker.setLatLng([latitude, longitude],);
+
+
+
+        }
+
+        getISS();
+        setInterval(getISS,3000);
+        var popup = L.popup();
+        function onMapClick(e) {
+            popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(mymap);
+    // alert("You clicked the map at " + e.latlng);
+}
+
+mymap.on('click', onMapClick);
+
+
+
+    </script>
+</body>
+
+</html>

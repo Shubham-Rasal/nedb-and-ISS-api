@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <title>Database</title>
+</head>
+
+<body>
+    <header style="border-radius: 50px;height: 50px;">
+
+        <div class="wrap">
+            <button class="button" id="submitbtn" onclick="location.href = './index.html'">Back</button>
+        </div>
+        <!-- <button onclick="location.href = './index.html'">Back</button> -->
+        <h1 style="text-align:center; height: 10px;;border-radius: 50px;">Find Your Data</h1>
+
+    </header>
+
+
+
+    <div id="form">
+        <label style="font-size:90px;height: 40px;;display: flex;justify-content: center;align-items: center;
+font-weight:700 " for="mood">Logs:</label>
+
+    </div>
+
+    <div id="list">
+        <!-- <div class="item">hello</div> -->
+
+    </div>
+
+
+
+
+
+
+    <style>
+        .button {
+            width: 200px;
+            height: 60px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #000;
+            background-color: #fff;
+            border: none;
+            border-radius: 45px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease 0s;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .button:hover {
+            background-color: #2EE59D;
+            box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+            color: #fff;
+            transform: translateY(-7px);
+        }
+
+        h1 {
+            margin-top: 70px;
+        }
+
+        #list {
+            margin-top: 100px;
+            height: 10px;
+            width: 200px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #item {
+            height: 50px;
+            width: 600px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            margin-left: 800px;
+            background-color: rgb(158, 232, 255);
+            border-radius: 45px;
+
+
+        }
+    </style>
+
+    <script>
+        // setInterval(trial,3000);
+        trial();
+        async function trial() {
+
+            const responses = await fetch('./api');
+            const retured = await responses.json();
+            console.log(retured);
+
+            let list = document.getElementById('list');
+
+            for (iterator of retured) {
+                let listItem = document.createElement('div')
+                listItem.id = 'item';
+                listItem.textContent = `Latitude:${iterator.lat}`+"    "+ `Longitude:${iterator.lng}`;
+                list.append(listItem);
+        }
+    }
+
+
+
+// });
+    </script>
+</body>
+
+</html>
